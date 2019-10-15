@@ -20,7 +20,7 @@ To build and start the container (takes about 15 minutes to build), run:
 ./Inf8500Tp2Container
 ```
 
-You can run this script again if you want to create a brand new container.
+You can run this script again if you want to create a brand new container, but make sure you save your code somewhere before deleting the directory that contains it.
 
 ### Interacting with the container
 
