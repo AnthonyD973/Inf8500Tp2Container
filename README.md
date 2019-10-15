@@ -10,36 +10,52 @@ You need to be on a Linux system to start a Linux container, so install Docker o
 
 Follow [these instructions](https://docs.docker.com/install/) to install Docker on your Linux system.
 
-### 2) Get the docker image
+### 2) Build the docker image and run the container
 
-You can either make the image
+**Important**: The code of the TP2 will be inside a shared directory on your host machine. This allows you to modify the code with your usual editor (e.g., VSCode) on your host machine and then just run `make` inside the conatiner without having to copy the files from your host to the container every time you change it. You might want the code of the TP2 to be in a specific directory on your host (e.g., inside your team's Git repository). In that case, run: `export SHARED_DIR_HOST_LOCATION="<the directory>"` before running the `Inf8500Tp2Container` script.
+
+To build and start the container (takes about 15 minutes to build), run:
 
 ```bash
-# Important: you must be in the directory that contains the "tp2-files-original" directory, otherwise the COPY step of the creation of the image will fail.
-cd /into/this/repo
-
-# Create the image (takes around 15 minutes).
-docker build -t inf8500-crave-fc4sc .
+./Inf8500Tp2Container
 ```
 
-### 3) Start the container
+### Interacting with the container
 
-The last command, `docker run`, will show a long ID that looks like: `f628502752d0bc7b3ee8d940cf41c9b41d5a79b0fd5310764753769b22f8f3cd`. This is the ID of the container. We will need this ID to be able to get into the container to compile and execute the code of TP2.
+#### Getting into a container
 
-```bash
-# Create a directory that in which the files of the TP2 will be put on the host system.
-dir=~/Desktop # Or any directory you want
-mkdir "${dir}"
-docker run -t -d --mount type=bind,source="${dir}",target=/root/Git/INF8500-TP2 anthonyd973/inf8500-crave-fc4sc
-```
+If everything happened correctly, the last line printed by the `Inf8500Tp2Container` script will be a rather long ID ; something like `78ef1ba64dc359faef3402bf9a8507fe367dc7f71096178c619a19bbb1202df5`.
 
-### 4) Get into the container
+The code of the TP2 will be in `/root/Git/INF8500-TP2/work` inside the container. There also is an example crave/FC4SC project in `root/Git/INF8500-TP2/bruleurs`. Don't forget to execute the `systemC_setup` and/or the `my_path` and `my_setup` scripts before running `make`.
 
-```bash
-containerId=<THE ID THAT WAS PRINTED IN THE LAST STEP>
 docker exec -it "${containerId}" /bin/bash
+
+#### Leaving the container
+
+Type `exit` to leave the container and return to your host.
+
+#### Listing existing containers
+
+```bash
+docker container ls
 ```
 
-### 5) Exiting the container
+#### Starting a container
 
-Either type `exit` or hit `CTRL+D` on an empty line.
+Starts a container that is stopped.
+
+```bash
+docker container start <container ID>
+```
+
+#### Stopping a container
+
+```bash
+docker container stop <container ID>
+```
+
+#### Removing a stopped container
+
+```bash
+docker container rm <container ID>
+```

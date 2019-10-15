@@ -1,10 +1,27 @@
 #!/bin/bash
+THIS_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
+cd "${THIS_SCRIPT_DIR}" # Make sure we're in the right directory.
 
+#####
+# VARIABLES. Can be edited.
+####
+
+# The location where we will place the crave and fc4sc git repositories.
 GIT_REPOS_DIR_GUEST_LOCATION="/root/Git"
 
-THIS_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
-SHARED_DIR_HOST_LOCATION="${THIS_SCRIPT_DIR}/tp2-files"
+# The location (on the host machine) of the shared directory that
+# will contain the code of the TP2.
+if [ -z "${SHARED_DIR_HOST_LOCATION}" ]; then
+    SHARED_DIR_HOST_LOCATION="${THIS_SCRIPT_DIR}/tp2-files"
+fi
+
+# The location (on the guest container) of the shared directory that
+# will contain the code of the TP2.
 SHARED_DIR_GUEST_LOCATION="${GIT_REPOS_DIR_GUEST_LOCATION}/INF8500-TP2"
+
+####
+# SCRIPT
+####
 
 # Build the container. Does nothing if it is already built.
 docker build -t inf8500-crave-fc4sc --build-arg=GIT_REPOS_DEST_DIR="${GIT_REPOS_DIR_GUEST_LOCATION}" .
