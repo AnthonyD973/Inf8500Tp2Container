@@ -14,6 +14,8 @@ GIT_REPOS_DIR_GUEST_LOCATION="/root/Git"
 if [ -z "${SHARED_DIR_HOST_LOCATION}" ]; then
     SHARED_DIR_HOST_LOCATION="${THIS_SCRIPT_DIR}/tp2-files"
 fi
+# Remove leading "~" in SHARED_DIR_HOST_LOCATION.
+export SHARED_DIR_HOST_LOCATION="$(echo "${SHARED_DIR_HOST_LOCATION}" | perl -p -e 's|^~|'"${HOME}"'|g')"
 
 # The location (on the guest container) of the shared directory that
 # will contain the code of the TP2.
@@ -27,7 +29,12 @@ SHARED_DIR_GUEST_LOCATION="${GIT_REPOS_DIR_GUEST_LOCATION}/INF8500-TP2"
 docker build -t inf8500-crave-fc4sc --build-arg=GIT_REPOS_DEST_DIR="${GIT_REPOS_DIR_GUEST_LOCATION}" .
 
 # Create the directory that will be shared with the host.
-mkdir "${SHARED_DIR_HOST_LOCATION}" && chmod 777 "${SHARED_DIR_HOST_LOCATION}" || exit 1
+if [ ! -e "${SHARED_DIR_HOST_LOCATION}" ]; then
+    mkdir -p "${SHARED_DIR_HOST_LOCATION}" && chmod 777 "${SHARED_DIR_HOST_LOCATION}"
+else
+    echo "Cannot start container: ${SHARED_DIR_HOST_LOCATION} already exists." >&2
+    exit 1
+fi
 
 # Start container.
 docker run -t -d --mount type=bind,source="${SHARED_DIR_HOST_LOCATION}",target="${SHARED_DIR_GUEST_LOCATION}" anthonyd973/inf8500-crave-fc4sc
