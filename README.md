@@ -20,13 +20,15 @@ To build and start the container (takes about 15 minutes to build), run:
 ./Inf8500Tp2Container
 ```
 
+You can run this script again if you want to create a brand new container.
+
 ### Interacting with the container
 
 #### Getting into a container
 
 If everything happened correctly, the last line printed by the `Inf8500Tp2Container` script will be a rather long ID ; something like `78ef1ba64dc359faef3402bf9a8507fe367dc7f71096178c619a19bbb1202df5`. This is the running container's ID.
 
-The code of the TP2 will be in `/root/Git/INF8500-TP2/work` inside the container. There also is an example crave/FC4SC project in `root/Git/INF8500-TP2/bruleurs`. Don't forget to execute the `systemC_setup` and/or the `my_path` and `my_setup` scripts before running `make`.
+The code of the TP2 will be in `/root/Git/INF8500-TP2/work` inside the container. There also is an example crave/FC4SC project in `root/Git/INF8500-TP2/bruleurs`. Don't forget to run `source my_setup` before running `make`.
 
 ```bash
 containerId="<THE CONTAINER'S ID>"
@@ -43,7 +45,7 @@ Type `exit` to leave the container and return to your host.
 docker container ls
 ```
 
-#### Starting a container
+#### Starting a stopped container
 
 Starts a container that is stopped.
 
