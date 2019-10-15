@@ -1,0 +1,23 @@
+#!/bin/bash
+
+GIT_REPOS_DIR_GUEST_LOCATION="/root/Git"
+
+THIS_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
+SHARED_DIR_HOST_LOCATION="${THIS_SCRIPT_DIR}/tp2-files"
+SHARED_DIR_GUEST_LOCATION="${GIT_REPOS_DIR_GUEST_LOCATION}/INF8500-TP2"
+
+# Build the container. Does nothing if it is already built.
+docker build -t inf8500-crave-fc4sc --build-arg=GIT_REPOS_DEST_DIR="${GIT_REPOS_DIR_GUEST_LOCATION}" .
+
+# Create the directory that will be shared with the host.
+mkdir "${SHARED_DIR_HOST_LOCATION}" && chmod 777 "${SHARED_DIR_HOST_LOCATION}" || exit 1
+
+# Start container.
+docker run -t -d --mount type=bind,source="${SHARED_DIR_HOST_LOCATION}",target="${SHARED_DIR_GUEST_LOCATION}" anthonyd973/inf8500-crave-fc4sc
+
+# Copy TP2 files.
+cp -r tp2-files-original/* "${SHARED_DIR_HOST_LOCATION}"
+
+# Edit the TP2 files, since they contain references to "/home/guy" directories,
+# which do not exist in our container.
+find "${SHARED_DIR_HOST_LOCATION}" -type f -print0 | xargs -0 perl -p -i -e 's|/home/guy|'"${GIT_REPOS_DIR_GUEST_LOCATION}"'|g'
