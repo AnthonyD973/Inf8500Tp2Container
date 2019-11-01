@@ -37,7 +37,7 @@ else
 fi
 
 # Start container.
-docker run -t -d --mount type=bind,source="${SHARED_DIR_HOST_LOCATION}",target="${SHARED_DIR_GUEST_LOCATION}" anthonyd973/inf8500-crave-fc4sc
+docker run -t -d --mount type=bind,source="${SHARED_DIR_HOST_LOCATION}",target="${SHARED_DIR_GUEST_LOCATION}" inf8500-crave-fc4sc
 
 # Copy TP2 files.
 cp -r tp2-files-original/* "${SHARED_DIR_HOST_LOCATION}"
